@@ -1,0 +1,125 @@
+header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+}
+
+.brand .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #4caf50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.nav-links {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.nav-link {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #6b7280;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.nav-link.active {
+    background: var(--accent);
+    color: white;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-welcome {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.btn-secondary {
+    border: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #f8faf9;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-logout {
+    border: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #dc2626;
+    color: white;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: #b91c1c;
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    .user-info {
+        display: none;
+    }
+}

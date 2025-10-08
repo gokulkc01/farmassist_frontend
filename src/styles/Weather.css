@@ -1,0 +1,242 @@
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.weather-wrap {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.weather-left {
+    flex: 1;
+}
+
+.weather-right {
+    width: 340px;
+}
+
+.search-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+    border: 1px solid #e6eef0;
+}
+
+.weather-card {
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+    padding: 1rem;
+}
+
+.weather-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.weather-header img {
+    width: 96px;
+    height: 96px;
+}
+
+.big-temp {
+    font-size: 3rem;
+    margin: 0;
+}
+
+.weather-details {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.weather-stats {
+    flex: 1;
+}
+
+.forecast-section {
+    margin-top: 1rem;
+}
+
+.forecast {
+    display: flex;
+    gap: 0.5rem;
+    overflow: auto;
+    padding-top: 0.75rem;
+}
+
+.forecast>div {
+    min-width: 72px;
+    background: #f7faf7;
+    border-radius: 10px;
+    padding: 0.6rem;
+    text-align: center;
+}
+
+.weather-image {
+    border-radius: 12px;
+    overflow: hidden;
+    height: 360px;
+    background: #f0f6f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.weather-placeholder {
+    text-align: center;
+    padding: 1rem;
+    color: var(--muted);
+}
+
+.monthly-summary {
+    margin-top: 1rem;
+}
+
+@media (max-width: 900px) {
+    .weather-wrap {
+        flex-direction: column;
+    }
+
+    .weather-right {
+        width: 100%;
+    }
+}
+
+@media (max-width: 550px) {
+    .weather-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .weather-header {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Add these to your existing Weather.css */
+
+.error-message {
+    background: #ffebee;
+    color: #c62828;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #c62828;
+}
+
+.weather-card.placeholder {
+    text-align: center;
+    color: var(--muted);
+}
+
+.forecast-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 80px;
+    background: #f7faf7;
+    border-radius: 10px;
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.forecast-date {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.forecast-temp {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.forecast-desc {
+    font-size: 0.7rem;
+    opacity: 0.8;
+}
+
+.weather-image-overlay {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.weather-image {
+    background-size: cover !important;
+    background-position: center !important;
+    transition: background-image 0.5s ease-in-out;
+}
+
+/* Loading animation */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.weather-stats p {
+    margin: 0.25rem 0;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .forecast {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .forecast-day {
+        min-width: 70px;
+        padding: 0.5rem;
+    }
+}
+
+/* Add location button styles */
+button.secondary {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #bbdefb;
+}
+
+button.secondary:hover {
+    background: #bbdefb;
+}
+
+button.secondary:disabled {
+    background: #f5f5f5;
+    color: #9e9e9e;
+    cursor: not-allowed;
+}
+
+/* Loading states */
+.location-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Success message */
+.success-message {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #2e7d32;
+}

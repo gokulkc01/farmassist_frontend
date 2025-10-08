@@ -1,0 +1,36 @@
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 360px;
+    max-width: 90vw;
+}
+
+.modal h3 {
+    margin: 0 0 1rem 0;
+}
+
+.modal input {
+    width: 100%;
+    padding: 0.6rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #e6eef0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
