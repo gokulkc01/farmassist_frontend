@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useAuth } from '../context/AuthContext';
 import { sensorAPI, weatherAPI, cropAPI, priceAPI } from '../services/api';
+import PriceCard from './PriceCard';
 
 import '../styles/Dashboard.css';
 
 const Dashboard = () => {
     const { isAuthenticated, user } = useAuth();
+    // 1. Initialize useNavigate hook
+    const navigate = useNavigate();
+    
     const [loading, setLoading] = useState(true);
     const [dashboardData, setDashboardData] = useState({
         sensorReadings: [],
@@ -58,14 +63,14 @@ const Dashboard = () => {
         );
     }
     
-
-     const handleCardClick = (page) => {
-        if (isAuthenticated) {
-            navigateTo(page);
-        } else {
-            openModal('login');
-        }
+    // 2. Define the navigation handler
+    const handleActionClick = (path) => {
+        // Use the navigate function to change the route
+        navigate(`/${path}`);
     };
+
+    // The original handleCardClick function is removed as it was attempting 
+    // to use <NavLink> incorrectly and relied on non-existent `openModal`.
 
     return (
         <div className="dashboard">
@@ -85,8 +90,14 @@ const Dashboard = () => {
                     })}</p>
                 </div>
             </div>
+            {/* Update Farm Button */}
+      <div className="update-farm-container">
+        <button className="update-farm-btn" onClick={() => handleActionClick('FarmRegister')}>
+          🏡 Update or Register Farm
+        </button>
+      </div>
 
-            {/* Quick Stats */}
+            {/* Quick Stats (No router links here, per request) */}
             <div className="stats-grid">
                 <div className="stat-card">
                     <div className="stat-icon">🌡️</div>
@@ -131,7 +142,7 @@ const Dashboard = () => {
             <div className="dashboard-grid">
                 {/* Left Column */}
                 <div className="dashboard-column">
-                    {/* Weather Widget */}
+                    {/* Weather Widget (No router links here, per request) */}
                     <div className="dashboard-card">
                         <div className="card-header">
                             <h3>🌤️ Current Weather</h3>
@@ -168,7 +179,7 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* Crop Updates */}
+                    {/* Crop Updates (No router links here, per request) */}
                     <div className="dashboard-card">
                         <div className="card-header">
                             <h3>🌱 Recent Crop Updates</h3>
@@ -195,7 +206,7 @@ const Dashboard = () => {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="no-data">No recent crop updates</p>
+                                <PriceCard cropType="Potato" />
                             )}
                         </div>
                     </div>
@@ -203,7 +214,7 @@ const Dashboard = () => {
 
                 {/* Right Column */}
                 <div className="dashboard-column">
-                    {/* Market Prices */}
+                    {/* Market Prices (No router links here, per request) */}
                     <div className="dashboard-card">
                         <div className="card-header">
                             <h3>💰 Market Prices</h3>
@@ -227,39 +238,40 @@ const Dashboard = () => {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="no-data">Market prices not available</p>
+                                <PriceCard cropType="Onion" />
                             )}
                         </div>
                     </div>
 
-                    {/* Quick Actions */}
+                    {/* Quick Actions - ONLY this section uses React Router */}
                     <div className="dashboard-card">
                         <div className="card-header">
                             <h3>⚡ Quick Actions</h3>
                         </div>
                         <div className="card-content">
                             <div className="actions-grid">
-                                <button className="action-btn" onClick={() => handleCardClick('weather')}>
+                                {/* 3. Add onClick handlers using handleActionClick for navigation */}
+                                <button className="action-btn" onClick={() => handleActionClick('weather')}>
                                     <span className="action-icon">🌤️</span>
                                     <span>Check Weather</span>
                                 </button>
-                                <button className="action-btn">
+                                <button className="action-btn" onClick={() => handleActionClick('priceCard')}>
                                     <span className="action-icon">💰</span>
                                     <span>Market Prices</span>
                                 </button>
-                                <button className="action-btn">
+                                <button className="action-btn" onClick={() => handleActionClick('plantHealth')}>
                                     <span className="action-icon">🌱</span>
                                     <span>Crop Health</span>
                                 </button>
-                                <button className="action-btn">
+                                <button className="action-btn" onClick={() => handleActionClick('motor')}>
                                     <span className="action-icon">💧</span>
                                     <span>Irrigation</span>
                                 </button>
-                                <button className="action-btn">
+                                <button className="action-btn" onClick={() => handleActionClick('analytics')}>
                                     <span className="action-icon">📊</span>
                                     <span>Analytics</span>
                                 </button>
-                                <button className="action-btn">
+                                <button className="action-btn" onClick={() => handleActionClick('more')}>
                                     <span className="action-icon">⚙️</span>
                                     <span>Settings</span>
                                 </button>
@@ -267,7 +279,7 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* Alerts */}
+                    {/* Alerts (No router links here, per request) */}
                     <div className="dashboard-card alert-card">
                         <div className="card-header">
                             <h3>🔔 Important Alerts</h3>

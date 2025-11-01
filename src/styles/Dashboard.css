@@ -409,3 +409,24 @@
         grid-template-columns: 1fr;
     }
 }
+
+.update-farm-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.update-farm-btn {
+  background-color: #2e7d32;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.update-farm-btn:hover {
+  background-color: #1b5e20;
+}

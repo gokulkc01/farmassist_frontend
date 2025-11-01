@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import '../styles/Modal.css';
 
 const Modal = ({ type, onClose, onAuthSuccess }) => {
+     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -26,6 +27,12 @@ const Modal = ({ type, onClose, onAuthSuccess }) => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        if (type === 'signup' && formData.password !== formData.confirmpassword) {
+    setError('Passwords do not match');
+    setLoading(false);
+    return;
+}
 
         try {
             let result;
@@ -100,14 +107,47 @@ const Modal = ({ type, onClose, onAuthSuccess }) => {
                     )}
 
                     <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         name="password"
                         placeholder="Password"
                         value={formData.password}
                         onChange={handleChange}
                         required
+                        minLength={6}
                         disabled={loading}
                     />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="show-hide-btn"
+                        tabIndex={-1}
+                        style={{ marginLeft: "8px" }}
+                    >
+                        {showPassword ? "Hide" : "Show"}
+                    </button>
+                    {type === 'signup' && (
+                        <input
+                        type={showPassword ? "text" : "password"}
+                        name="confirmpassword"
+                        placeholder="Confirm Password"
+                        value={formData.confirmpassword}
+                        onChange={handleChange}
+                        required
+                         minLength={6}
+                        disabled={loading}
+                    />
+                    )}
+                     
+                    {/* <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="show-hide-btn"
+                        tabIndex={-1}
+                        style={{ marginLeft: "8px" }}
+                    >
+                        {showPassword ? "Hide" : "Show"}
+                    </button> */}
+                 
 
                     <div className="modal-actions">
                         <button type="button" onClick={onClose} disabled={loading}>

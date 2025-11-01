@@ -11,7 +11,7 @@ const useSafeSensor = () => {
   } catch (error) {
     console.warn('❌ SensorContext not available, using mock data:', error);
     return {
-      soilMoisture: 65,
+      soilMoisture: 15,
       temperature: 28,
       humidity: 72
     };
@@ -23,7 +23,7 @@ const Motor = () => {
   
   // Use safe sensor hook
   const sensorData = useSafeSensor();
-  const soilMoisture = sensorData?.soilMoisture || 65;
+  const soilMoisture = sensorData?.soilMoisture || 15;
   
   console.log('🌱 Sensor data:', sensorData);
   console.log('💧 Soil moisture:', soilMoisture);
@@ -43,7 +43,7 @@ const Motor = () => {
         
         if ('speechSynthesis' in window) {
           const speech = new SpeechSynthesisUtterance(
-            action === 'on' ? 'Motor started successfully' : 'Motor stopped'
+            action === 'on' ? 'Motor started successfully' : 'Motor stopped successfully'
           );
           speech.lang = 'kn-IN';
           window.speechSynthesis.speak(speech);

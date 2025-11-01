@@ -1,0 +1,393 @@
+/* MarketPrices.css
+    Custom styles for the Market Prices page, based on the component structure.
+*/
+
+/* --- VARIABLES --- */
+:root {
+    --primary-color: #0d9488;       /* Teal-600: Stronger green for accents */
+    --primary-light: #ccfbf1;       /* Teal-50: Very light background accent */
+    --primary-dark: #0f766e;        /* Teal-700: Darker for prominent text/price */
+    --red-color: #dc2626;           /* Red-600 */
+    --green-trend: #16a34a;         /* Green-600 for trends */
+    --yellow-trend: #d97706;        /* Amber-700 for stable */
+    --text-dark: #1f2937;           /* Gray-900 */
+    --text-medium: #4b5563;         /* Gray-600 */
+    --text-light: #9ca3af;          /* Gray-400 */
+    --bg-light: #f3f4f6;            /* Gray-100: Slightly deeper background */
+    --bg-white: #ffffff;
+    /* Updated Shadows for more depth */
+    --shadow-base: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* ------------------- */
+/* --- PAGE LAYOUT --- */
+/* ------------------- */
+
+.market-prices-page {
+    min-height: 100vh;
+    padding: 1rem;
+    background-color: var(--bg-light);
+}
+
+.market-prices-container {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Responsive Padding for larger screens */
+@media (min-width: 640px) {
+    .market-prices-page {
+        padding: 2rem; /* Increased padding */
+    }
+}
+
+/* ------------------- */
+/* --- HEADER --- */
+/* ------------------- */
+
+.page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb; /* Subtle separator */
+}
+
+.page-title {
+    font-size: 2rem; /* Larger title */
+    font-weight: 800;
+    color: var(--primary-dark); /* Using dark primary color */
+    margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+    color: var(--text-medium);
+    font-size: 1rem;
+}
+
+/* Responsive Font Size for title */
+@media (min-width: 640px) {
+    .page-title {
+        font-size: 2.5rem; 
+    }
+}
+
+/* ------------------- */
+/* --- SEARCH BAR (Sticky & Responsive) --- */
+/* ------------------- */
+
+.search-sticky-wrapper {
+    margin-bottom: 2.5rem; /* Increased margin */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.search-container {
+    padding: 1rem;
+    background-color: var(--bg-white);
+    border-radius: 1rem; /* More rounded */
+    box-shadow: var(--shadow-base);
+    border: 2px solid var(--primary-light); /* Prominent light border */
+}
+
+.search-input-wrapper {
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3.5rem; /* Increased padding/height */
+    font-size: 1.125rem;
+    border: 1px solid #d1d5db; /* Lighter default border */
+    border-radius: 0.75rem;
+    outline: none;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease;
+}
+
+.search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2); /* Focus ring effect */
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 1.5rem;
+    width: 1.5rem;
+    color: var(--primary-color); /* Highlight search icon */
+}
+
+/* ------------------- */
+/* --- PRICE GRID (Responsive) --- */
+/* ------------------- */
+
+.price-grid {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 1.5rem;
+}
+
+/* Tablet (md:grid-cols-2) */
+@media (min-width: 768px) {
+    .price-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop (lg:grid-cols-3) */
+@media (min-width: 1024px) {
+    .price-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Large Desktop (xl:grid-cols-4) */
+@media (min-width: 1280px) {
+    .price-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ------------------- */
+/* --- SINGLE PRICE CARD --- */
+/* ------------------- */
+
+.price-card {
+    background-color: var(--bg-white);
+    padding: 1.5rem;
+    border-radius: 1rem; /* More rounded */
+    box-shadow: var(--shadow-base);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    position: relative;
+}
+
+.price-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-5px); /* Lift effect */
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    border-bottom: 1px dashed #e5e7eb; /* Dashed separator */
+    padding-bottom: 0.5rem;
+}
+
+.crop-info {
+    display: flex;
+    align-items: center;
+}
+
+.crop-icon {
+    font-size: 2.25rem; /* Larger icon */
+    margin-right: 0.75rem;
+}
+
+.crop-name {
+    font-size: 1.375rem; /* Slightly larger name */
+    font-weight: 800;
+    color: var(--text-dark);
+}
+
+.crop-state {
+    font-size: 0.875rem;
+    color: var(--text-medium);
+    margin-top: 0.125rem;
+}
+
+.refresh-button {
+    color: var(--text-light);
+    transition: color 0.15s, transform 0.3s;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.refresh-button:hover {
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    transform: rotate(45deg);
+}
+
+.icon {
+    height: 1.25rem;
+    width: 1.25rem;
+    stroke: currentColor;
+}
+
+/* Price Highlight */
+.price-highlight {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.current-price-main {
+    font-size: 2.5rem; /* Larger price */
+    font-weight: 900;
+    color: var(--primary-color); /* Main price in primary color */
+}
+
+.currency-symbol {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.unit-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-medium);
+    margin-left: 0.5rem;
+}
+
+.trend-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.trend-icon {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+/* Trend Colors (Adjusted for contrast) */
+.increasing {
+    color: var(--green-trend);
+}
+.decreasing {
+    color: var(--red-color);
+}
+.stable {
+    color: var(--yellow-trend);
+}
+
+.price-per-kg {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 0.125rem;
+}
+
+/* Price Range */
+.price-range {
+    margin-bottom: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #f3f4f6; /* Subtle line above range */
+}
+
+.range-label {
+    font-size: 0.6875rem; /* Smaller, sharper label */
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.range-values {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.min-price {
+    color: var(--red-color);
+}
+
+.max-price {
+    color: var(--green-trend);
+}
+
+/* Market Info */
+.market-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--text-medium);
+    padding-top: 0.5rem;
+    border-top: 1px solid #f3f4f6;
+    margin-top: 0.5rem;
+}
+
+.market-detail {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.market-detail .icon {
+    height: 1rem;
+    width: 1rem;
+    margin-right: 0.25rem;
+    color: var(--primary-color); /* Highlight info icons */
+}
+
+/* ------------------- */
+/* --- NO RESULTS / LOADING --- */
+/* ------------------- */
+
+.no-results-message {
+    text-align: center;
+    padding: 4rem 1rem;
+    background-color: var(--bg-white);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-base);
+    border: 1px solid #e5e7eb;
+}
+
+.no-results-title {
+    font-size: 1.75rem;
+    color: var(--text-medium);
+    font-weight: 600;
+}
+
+.no-results-subtitle {
+    margin-top: 0.5rem;
+    color: var(--text-light);
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 2rem;
+}
+
+.loading-text {
+    margin-left: 1rem;
+    color: var(--text-medium);
+}
+
+/* Loading Spinner */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner-large {
+    border: 6px solid #e5e7eb;
+    border-top: 6px solid var(--primary-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}

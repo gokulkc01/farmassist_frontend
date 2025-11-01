@@ -296,5 +296,10 @@ PriceCard.defaultProps = {
     showDetails: true,
     className: ''
 };
+PriceCard.defaultProps = {
+    cropType: 'Potato',
+    showDetails: true,
+    className: ''
+};
 
 export default PriceCard;

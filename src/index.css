@@ -2,33 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles can be added here */
-body {
-  @apply bg-gray-100 text-gray-800;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 142 76% 36%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 142 76% 36%;
+  }
 }
 
-a {
-  @apply text-blue-500 hover:text-blue-700;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @apply font-bold;
-}
-
-p {
-  @apply mb-4;
-}
-
-button {
-  @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600;
-}
-
-input,
-textarea {
-  @apply border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

@@ -11,7 +11,8 @@ const Navbar = ({ navigateTo, openModal, currentPage }) => {
     };
 
     const isActive = (page) => {
-        return currentPage === page ? 'active' : '';
+        return currentPage === page ? "bg-blue-600 text-white px-4 py-2 rounded-md" 
+            : "text-gray-700 hover:bg-blue-100 px-4 py-2 rounded-md transition-colors";
     };
 
     return (
@@ -37,7 +38,7 @@ const Navbar = ({ navigateTo, openModal, currentPage }) => {
                     Weather
                 </button>
                 <button
-                    className={`nav-link ${isActive('marketPrices')}`}
+                    className={`nav-link ${isActive('PriceCard')}`}
                     onClick={() => navigateTo('PriceCard')}
                 >
                     Market Prices
@@ -49,7 +50,7 @@ const Navbar = ({ navigateTo, openModal, currentPage }) => {
                     Soil Health
                 </button>
                 <button
-                    className={`nav-link ${isActive('plantHealth')}`}
+                    className={`nav-link ${isActive('PlantHealth')}`}
                     onClick={() => navigateTo('PlantHealth')}
                 >
                     Plant Health
@@ -64,7 +65,7 @@ const Navbar = ({ navigateTo, openModal, currentPage }) => {
                 </div>
                 <button
                     onClick={() => navigateTo('home')}
-                    className="btn-secondary"
+                     className={`nav-link ${isActive('Home')}`}
                 >
                     Home
                 </button>

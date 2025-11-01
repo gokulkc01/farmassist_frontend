@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { SensorProvider } from '../context/SensorContext';
 import Navbar from '../components/Navbar';
@@ -15,31 +16,49 @@ import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
 import Dashboard from '../components/Dashboard';
 import '../styles/App.css';
+import MarketPrices from '../components/MarketPrice';
+import FarmRegister from '../components/FarmRegister';
 
-// Main App Content Component
+// Component to wrap protected routes
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
+
+  if (loading) {
+    // Show loading state while auth status is being determined
+    return (
+      <div className="app-loading">
+        <div className="spinner-large"></div>
+        <p>Loading FarmAssist...</p>
+      </div>
+    );
+  }
+
+  // Redirect to home if not authenticated, preserving the current location
+  if (!isAuthenticated) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  return children;
+};
+
+// Main App Layout/Content Component
 const AppContent = () => {
-  const [currentPage, setCurrentPage] = useState('home');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('login');
+  const { isAuthenticated, loading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const { isAuthenticated, user, loading } = useAuth();
-
-  // Redirect to login if not authenticated and trying to access protected pages
-  useEffect(() => {
-    if (!loading && !isAuthenticated && currentPage !== 'home') {
-      setCurrentPage('home');
-    }
-  }, [isAuthenticated, loading, currentPage]);
-
-  const navigateTo = (page) => {
-    // If trying to access protected pages without authentication, show login modal
-    if (page !== 'home' && !isAuthenticated) {
-      setModalType('login');
-      setIsModalOpen(true);
-      return;
-    }
-    setCurrentPage(page);
-  };
+  // Show loading state for the initial load
+  if (loading) {
+    return (
+      <div className="app-loading">
+        <div className="spinner-large"></div>
+        <p>Loading FarmAssist...</p>
+      </div>
+    );
+  }
 
   const openModal = (type) => {
     setModalType(type);
@@ -52,96 +71,63 @@ const AppContent = () => {
 
   const handleAuthSuccess = () => {
     closeModal();
-    // Redirect to dashboard after successful login/register
-    setCurrentPage('dashboard');
+    // Use react-router's navigate to go to the dashboard or the page they tried to access
+    const from = location.state?.from?.pathname || "/dashboard";
+    navigate(from, { replace: true });
   };
 
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="app-loading">
-        <div className="spinner-large"></div>
-        <p>Loading FarmAssist...</p>
-      </div>
-    );
-  }
+  // Determine current page for Navbar active link state
+  const currentPagePath = location.pathname.substring(1); // e.g., 'dashboard' from '/dashboard'
 
-  // Show login/register pages directly if not authenticated
-  if (!isAuthenticated && (currentPage === 'login' || currentPage === 'register')) {
-    return (
-      <div className="app">
-        {currentPage === 'login' ? (
-          <Login onAuthSuccess={handleAuthSuccess} />
-        ) : (
-          <Register onAuthSuccess={handleAuthSuccess} />
-        )}
-      </div>
-    );
-  }
+  // Determine if Navbar should be shown
+  const showNavbar = isAuthenticated && !['home', 'login', 'register', ''].includes(currentPagePath);
+  
+  // Determine if Footer should be shown
+  const showFooter = location.pathname === '/' || isAuthenticated;
 
-  // Show authentication pages if not logged in and trying to access app
-  if (!isAuthenticated && currentPage !== 'home') {
-    return (
-      <div className="app">
-        <Home navigateTo={navigateTo} openModal={openModal} />
-        {isModalOpen && (
-          <Modal type={modalType} onClose={closeModal} onAuthSuccess={handleAuthSuccess} />
-        )}
-      </div>
-    );
-  }
-
-  // Render the main app for authenticated users
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <Dashboard navigateTo={navigateTo} />;
-      case 'weather':
-        return <Weather navigateTo={navigateTo} />;
-      case 'soilHealth':
-        return <SoilHealth navigateTo={navigateTo} />;
-      case 'soilMoisture':
-        return <SoilMoisture navigateTo={navigateTo} />;
-      case 'Motor':
-        return <Motor navigateTo={navigateTo} />;
-      case 'planHealth':
-        return <PlantHealth navigateTo={navigateTo} />;
-      case 'PriceCard':
-        return <PriceCard navigateTo={navigateTo} />;
-      case 'more':
-        return <More navigateTo={navigateTo} />;
-      case 'login':
-        return <Login onAuthSuccess={handleAuthSuccess} />;
-      case 'register':
-        return <Register onAuthSuccess={handleAuthSuccess} />;
-      default:
-        return <Home navigateTo={navigateTo} openModal={openModal} />;
-    }
-  };
 
   return (
     <div className="app">
-      {/* Show navbar only for authenticated users on app pages */}
-      {(isAuthenticated && currentPage !== 'home' && currentPage !== 'login' && currentPage !== 'register') && (
+      {/* Navbar for authenticated users on app pages */}
+      {showNavbar && (
         <Navbar
-          navigateTo={navigateTo}
+          navigateTo={navigate} // Use react-router's navigate
           openModal={openModal}
-          currentPage={currentPage}
+          currentPage={currentPagePath}
         />
       )}
 
       <main>
         <div className="center-card">
-          {renderPage()}
+          <Routes>
+            {/* Public Routes */}
+              <Route path="/" element={<Home navigateTo={navigate} openModal={openModal} />} />
+            <Route path="/login" element={<Login onAuthSuccess={handleAuthSuccess} />} />
+            <Route path="/register" element={<Register onAuthSuccess={handleAuthSuccess} />} />
+
+            {/* Protected Routes */}
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard navigateTo={navigate} /></ProtectedRoute>} />
+            <Route path="/weather" element={<ProtectedRoute><Weather navigateTo={navigate} /></ProtectedRoute>} />
+            <Route path="/soilHealth" element={<ProtectedRoute><SoilHealth navigateTo={navigate} /></ProtectedRoute>} />
+            <Route path="/soilMoisture" element={<ProtectedRoute><SoilMoisture navigateTo={navigate} /></ProtectedRoute>} />
+            <Route path="/motor" element={<ProtectedRoute><Motor navigateTo={navigate} /></ProtectedRoute>} />
+            <Route path="/plantHealth" element={<ProtectedRoute><PlantHealth navigateTo={navigate} /></ProtectedRoute>} />
+            <Route path="/priceCard" element={<ProtectedRoute><MarketPrices navigateTo={navigate} /></ProtectedRoute>} />
+            <Route path="/more" element={<ProtectedRoute><More navigateTo={navigate} /></ProtectedRoute>} />
+            <Route path="/FarmRegister" element={<ProtectedRoute><FarmRegister navigateTo={navigate} /></ProtectedRoute>} />
+
+            {/* Catch-all for 404 - redirects to home or another page */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </div>
       </main>
 
-      {/* Show footer only for home page and authenticated app pages */}
-      {(currentPage === 'home' || isAuthenticated) && (
+      {/* Footer */}
+      {showFooter && (
         <footer>&copy; 2025 FarmAssist — Built for farmers</footer>
       )}
 
-      {/* Modal for login/register (used on home page) */}
+      {/* Modal for login/register (only opened manually, e.g., from home or a button) */}
       {isModalOpen && (
         <Modal
           type={modalType}
@@ -153,14 +139,16 @@ const AppContent = () => {
   );
 };
 
-// Main App Wrapper with AuthProvider
+// Main App Wrapper with AuthProvider and BrowserRouter
 function App() {
   return (
-    <AuthProvider>
-      <SensorProvider>
-      <AppContent />
-      </SensorProvider>
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <SensorProvider>
+          <AppContent />
+        </SensorProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
