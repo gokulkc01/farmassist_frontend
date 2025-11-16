@@ -18,6 +18,7 @@ import Dashboard from '../components/Dashboard';
 import '../styles/App.css';
 import MarketPrices from '../components/MarketPrice';
 import FarmRegister from '../components/FarmRegister';
+import Analytics from '../components/Analytics';
 
 // Component to wrap protected routes
 const ProtectedRoute = ({ children }) => {
@@ -115,6 +116,7 @@ const AppContent = () => {
             <Route path="/priceCard" element={<ProtectedRoute><MarketPrices navigateTo={navigate} /></ProtectedRoute>} />
             <Route path="/more" element={<ProtectedRoute><More navigateTo={navigate} /></ProtectedRoute>} />
             <Route path="/FarmRegister" element={<ProtectedRoute><FarmRegister navigateTo={navigate} /></ProtectedRoute>} />
+            <Route path="/analytics" element={<ProtectedRoute><Analytics navigateTo={navigate}></Analytics></ProtectedRoute>}/>
 
             {/* Catch-all for 404 - redirects to home or another page */}
             <Route path="*" element={<Navigate to="/" replace />} />

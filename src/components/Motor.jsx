@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import '../styles/MotorControl.css';
 
+//Your Express server
+const API_URL = 'http://localhost:5000/api';
+
 // Safe sensor hook with fallback
 const useSafeSensor = () => {
   try {
@@ -29,17 +32,32 @@ const Motor = () => {
   console.log('💧 Soil moisture:', soilMoisture);
 
   const [motorStatus, setMotorStatus] = useState('off');
+  const [ledStatus, setLedStatus] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleMotorToggle = async (action) => {
     console.log(`🔄 Toggling motor to: ${action}`);
     setIsLoading(true);
+    setLedStatus('Sending command...');
     
     try {
-      setTimeout(() => {
+      
+        // setMotorStatus(action);
+        // setIsLoading(false);
+        // console.log(`✅ Motor ${action} successful`);
+
+        const response = await fetch(`${API_URL}/led`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({action})
+        });
+
+        const data = await response.json();
+
+         if (data.success) {
         setMotorStatus(action);
-        setIsLoading(false);
-        console.log(`✅ Motor ${action} successful`);
+        setLedStatus(`✅ ${data.message}`);
+        console.log('✅ Motor & LED control successful:', data);
         
         if ('speechSynthesis' in window) {
           const speech = new SpeechSynthesisUtterance(
@@ -48,10 +66,17 @@ const Motor = () => {
           speech.lang = 'kn-IN';
           window.speechSynthesis.speak(speech);
         }
-      }, 1000);
+        } else {
+        setLedStatus(`❌ Error: ${data.error}`);
+        console.error('❌ LED control failed:', data);
+      }
+      
     } catch (error) {
       console.error('❌ Motor control error:', error);
       setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => setLedStatus(''), 3000);
     }
   };
 
@@ -67,7 +92,7 @@ const Motor = () => {
 
   return (
     <div className="motor-control">
-      <h3>🚰 Irrigation Control - LOADED</h3>
+      <h3>🚰 Irrigation Control with LED Feedback</h3>
       
       <div className="motor-status">
         <div className={`status-indicator ${motorStatus}`}>
@@ -81,6 +106,12 @@ const Motor = () => {
         <div className="recommendation">
           💡 {recommendation.message}
         </div>
+
+         {ledStatus && (
+          <div className="led-status">
+            {ledStatus}
+          </div>
+        )}
       </div>
 
       <div className="motor-controls">
@@ -89,7 +120,7 @@ const Motor = () => {
           onClick={() => handleMotorToggle('on')}
           disabled={isLoading || motorStatus === 'on'}
         >
-          {isLoading ? '🔄 Starting...' : '🚀 Start Motor'}
+          {isLoading ? '🔄 Starting...' : '🚀 Start Motor and Blink LED'}
         </button>
         
         <button 
@@ -104,10 +135,12 @@ const Motor = () => {
       <div className="voice-control">
         <h4>🎤 Voice Commands (Kannada)</h4>
         <div className="voice-commands">
-          <button className="voice-btn" onClick={() => handleMotorToggle('on')}>
+          <button className="voice-btn" onClick={() => handleMotorToggle('on')}
+             disabled={isLoading || motorStatus === 'on'}>
             "ಮೋಟರ್ ಆನ್ ಮಾಡಿ" (Start Motor)
           </button>
-          <button className="voice-btn" onClick={() => handleMotorToggle('off')}>
+          <button className="voice-btn" onClick={() => handleMotorToggle('off')}
+            disabled={isLoading || motorStatus === 'off'}>
             "ಮೋಟರ್ ಆಫ್ ಮಾಡಿ" (Stop Motor)
           </button>
         </div>

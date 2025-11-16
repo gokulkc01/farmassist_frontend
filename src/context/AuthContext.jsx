@@ -14,7 +14,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [token, setToken] = useState(localStorage.getItem('farmassist_token'));
+    const [token, setToken] = useState(null);
 
     // Check if user is authenticated on app start
     useEffect(() => {
@@ -22,28 +22,51 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const checkAuthStatus = async () => {
-        const storedToken = localStorage.getItem('farmassist_token');
-        const storedUser = localStorage.getItem('farmassist_user');
+        try {
+            const storedToken = localStorage.getItem('farmassist_token');
+            const storedUser = localStorage.getItem('farmassist_user');
 
-        if (storedToken && storedUser) {
-            try {
-                // Verify token is still valid
-                const response = await authAPI.getCurrentUser();
-                setUser(response.data.data.user);
+            console.log('Checking auth status...', { 
+                hasToken: !!storedToken, 
+                hasUser: !!storedUser 
+            });
+
+            if (storedToken && storedUser) {
+                // Set token and user immediately from localStorage
                 setToken(storedToken);
-            } catch (error) {
-                // Token is invalid, clear storage
-                logout();
+                setUser(JSON.parse(storedUser));
+
+                try {
+                    // Verify token is still valid with backend
+                    const response = await authAPI.getCurrentUser();
+                    const validatedUser = response.data.data.user;
+                    
+                    // Update with fresh user data from server
+                    setUser(validatedUser);
+                    localStorage.setItem('farmassist_user', JSON.stringify(validatedUser));
+                    
+                    console.log('Auth validated successfully');
+                } catch (error) {
+                    console.error('Token validation failed:', error);
+                    // Token is invalid, clear storage
+                    logout();
+                }
+            } else {
+                console.log('No stored auth found');
             }
+        } catch (error) {
+            console.error('Error checking auth status:', error);
+            logout();
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const login = async (email, password) => {
         try {
             const response = await authAPI.login({ email, password });
-            console.log('Full response: ', response);
-             console.log('Login response:', response.data); // Debug
+            console.log('Login response:', response.data);
+            
             const { user: userData, token: userToken } = response.data.data;
 
             // Store in localStorage
@@ -54,8 +77,11 @@ export const AuthProvider = ({ children }) => {
             setUser(userData);
             setToken(userToken);
 
+            console.log('Login successful, auth state updated');
+
             return { success: true, data: response.data };
         } catch (error) {
+            console.error('Login error:', error);
             return {
                 success: false,
                 message: error.response?.data?.message || 'Login failed'
@@ -76,8 +102,11 @@ export const AuthProvider = ({ children }) => {
             setUser(newUser);
             setToken(userToken);
 
+            console.log('Registration successful, auth state updated');
+
             return { success: true, data: response.data };
         } catch (error) {
+            console.error('Registration error:', error);
             return {
                 success: false,
                 message: error.response?.data?.message || 'Registration failed'
@@ -86,6 +115,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
+        console.log('Logging out...');
+        
         // Clear localStorage
         localStorage.removeItem('farmassist_token');
         localStorage.removeItem('farmassist_user');
